@@ -169,7 +169,7 @@ pub const InitFlags = struct {
     events: bool = false,
     sensor: bool = false,
 
-    pub fn from_u32(flags: u32) InitFlags {
+    pub fn fromNative(flags: u32) InitFlags {
         return .{
             .timer = (flags & c.SDL_INIT_TIMER) != 0,
             .audio = (flags & c.SDL_INIT_AUDIO) != 0,
@@ -182,7 +182,7 @@ pub const InitFlags = struct {
         };
     }
 
-    pub fn as_u32(self: InitFlags) u32 {
+    pub fn toNative(self: InitFlags) u32 {
         return (if (self.timer) @as(u32, c.SDL_INIT_TIMER) else 0) |
             (if (self.audio) @as(u32, c.SDL_INIT_AUDIO) else 0) |
             (if (self.video) @as(u32, c.SDL_INIT_VIDEO) else 0) |
@@ -195,12 +195,12 @@ pub const InitFlags = struct {
 };
 
 pub fn init(flags: InitFlags) !void {
-    if (c.SDL_Init(flags.as_u32()) < 0)
+    if (c.SDL_Init(flags.toNative()) < 0)
         return makeError();
 }
 
 pub fn wasInit(flags: InitFlags) InitFlags {
-    return InitFlags.from_u32(c.SDL_WasInit(flags.as_u32()));
+    return InitFlags.fromNative(c.SDL_WasInit(flags.toNative()));
 }
 
 pub fn quit() void {
